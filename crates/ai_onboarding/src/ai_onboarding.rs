@@ -2,7 +2,7 @@ mod agent_api_keys_onboarding;
 mod agent_panel_onboarding_card;
 mod agent_panel_onboarding_content;
 //mod ai_upsell_card;
-//mod edit_prediction_onboarding_content;
+mod edit_prediction_onboarding_content;
 //mod plan_definitions;
 //mod young_account_banner;
 
@@ -11,7 +11,8 @@ pub use agent_panel_onboarding_card::AgentPanelOnboardingCard;
 pub use agent_panel_onboarding_content::AgentPanelOnboarding;
 
 use cloud_api_types::Plan;
-//removed ai_upsell_card,edit_prediction_onboarding_content,pub use plan_definitions::PlanDefinitions and pub use young_account_banner::YoungAccountBanner.
+pub use edit_prediction_onboarding_content::EditPredictionOnboarding;
+//removed ai_upsell_card,pub use plan_definitions::PlanDefinitions and pub use young_account_banner::YoungAccountBanner.
 
 use std::sync::Arc;
 
