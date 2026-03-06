@@ -126,16 +126,16 @@ fn render_pro_plan_state(&self, _cx: &mut App) -> AnyElement {
 impl RenderOnce for ZedAiOnboarding {
     fn render(self, _window: &mut ui::Window, cx: &mut App) -> impl IntoElement {
         if matches!(self.sign_in_status, SignInStatus::SignedIn) {
-            match self.plan {
-            	None => self.render_pro_plan_state(cx) //meme.
-
-            	
+        	 if let None = self.plan {self.render_pro_plan_state(cx)}//meme.
+        	 /**
+            match self.plan {//cannot let none only if use match must handle most else throw>non-exhaustive patterns: `Some(_)` not covered
                 //None => self.render_free_plan_state(cx),
                 //Some(Plan::ZedFree) => self.render_free_plan_state(cx),
                 //Some(Plan::ZedProTrial) => self.render_trial_state(cx),
                 //Some(Plan::ZedPro) => self.render_pro_plan_state(cx),
                 //Some(Plan::ZedStudent) => self.render_student_plan_state(cx),
             }
+            */
         }else{self.render_pro_plan_state(cx)}
          //else {self.render_sign_in_disclaimer(cx)}
     }
