@@ -1,0 +1,79 @@
+name: Build Zed Windows
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    env:
+      CARGO_TERM_COLOR: always
+
+    steps:
+      # --- Step 1: Checkout repo ---
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # --- Step 2: Install Rust ---
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-pc-windows-msvc
+          profile: minimal
+          override: true
+
+      # --- Step 3: Detect Visual Studio / Build Tools ---
+      - name: Locate Visual Studio
+        shell: pwsh
+        run: |
+          $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $vsPath) { throw "Visual Studio with required VC tools not found" }
+          Write-Host "Visual Studio Path: $vsPath"
+          # Setup VS environment
+          $vcVars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+          & cmd /c "$vcVars && set" | Out-File -FilePath env.txt
+          Get-Content env.txt | ForEach-Object { $name, $value = ($_ -split '=',2); if ($name) { Write-Host "$name=$value" } }
+
+      # --- Step 4: Ensure CMake is installed ---
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v1
+        with:
+          version: '3.27.0' # adjust as needed
+
+      # --- Step 5: Enable long paths ---
+      - name: Enable long path support
+        shell: pwsh
+        run: |
+          git config --system core.longpaths true
+          New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+
+      # --- Step 6: Create Cargo config.toml ---
+      - name: Create Cargo config for Windows build
+        run: |
+          mkdir -Force .cargo
+          echo "[build]" > .cargo/config.toml
+          echo 'rustflags = ["-C", "symbol-mangling-version=v0", "--cfg", "tokio_unstable"]' >> .cargo/config.toml
+          echo '[target."cfg(target_os = \"windows\")"]' >> .cargo/config.toml
+          echo 'rustflags = ["--cfg", "windows_slim_errors", "-C", "target-feature=+crt-static"]' >> .cargo/config.toml
+
+      # --- Step 7: Debug build ---
+      - name: Cargo debug build
+        run: cargo run
+
+      # --- Step 8: Release build ---
+      - name: Cargo release build
+        run: cargo run --release
+
+      # --- Step 9: Run workspace tests ---
+      - name: Run tests
+        run: cargo test --workspace
+
+      # --- Optional: PostgreSQL setup notes ---
+      - name: PostgreSQL notes
+        run: |
+          Write-Host "If using PostgreSQL, ensure pg_hba.conf uses 'trust' for local connections."
+          Write-Host "Set lc_messages in postgresql.conf to 'English_United States.1252' if locale is non-Latin."
