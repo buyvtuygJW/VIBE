@@ -7,13 +7,13 @@ use std::{collections::HashMap, fmt::Display, time::Duration};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct EventRequestBody {
     /// Identifier unique to each system Zed is installed on
-    pub system_id: Option<String>,
+    // pub system_id: Option<String>,
     /// Identifier unique to each Zed installation (differs for stable, preview, dev)
-    pub installation_id: Option<String>,
+    // pub installation_id: Option<String>,
     /// Identifier unique to each logged in Zed user (randomly generated on first sign in)
     /// Identifier unique to each Zed session (differs for each time you open Zed)
-    pub session_id: Option<String>,
-    pub metrics_id: Option<String>,
+    // pub session_id: Option<String>,
+    // pub metrics_id: Option<String>,
     /// True for Zed staff, otherwise false
     #[serde(skip_serializing_if = "Option::is_none")]
     pub is_staff: Option<bool>,
@@ -23,7 +23,7 @@ pub struct EventRequestBody {
     pub os_version: Option<String>,
     pub architecture: String,
     /// Zed release channel (stable, preview, dev)
-    pub release_channel: Option<String>,
+    // pub release_channel: Option<String>,
     pub events: Vec<EventWrapper>,
 }
 
@@ -35,7 +35,7 @@ impl EventRequestBody {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct EventWrapper {
-    pub signed_in: bool,
+    // pub signed_in: bool,
     /// Duration between this event's timestamp and the timestamp of the first event in the current batch
     pub milliseconds_since_first_event: i64,
     /// The event itself
@@ -102,15 +102,12 @@ pub struct FlexibleEvent {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum EditPredictionRating {
-    Positive,
-    Negative,
-}
+pub enum EditPredictionRating {Positive,Negative,}
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AssistantEventData {
     /// Unique random identifier for each assistant tab (None for inline assist)
-    pub conversation_id: Option<String>,
+    // pub conversation_id: Option<String>,
     /// Server-generated message ID (only supported for some providers)
     pub message_id: Option<String>,
     /// The kind of assistant (Panel, Inline)
@@ -118,7 +115,7 @@ pub struct AssistantEventData {
     #[serde(default)]
     pub phase: AssistantPhase,
     /// Name of the AI model used (gpt-4o, claude-3-5-sonnet, etc)
-    pub model: String,
+    // pub model: String,
     pub model_provider: String,
     pub response_latency: Option<Duration>,
     pub error_message: Option<String>,

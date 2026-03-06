@@ -372,11 +372,13 @@ impl Telemetry {
     }
 
     pub fn metrics_enabled(self: &Arc<Self>) -> bool {
-        self.state.lock().settings.metrics
+        //self.state.lock().settings.metrics
+        false
     }
 
     pub fn diagnostics_enabled(self: &Arc<Self>) -> bool {
-        self.state.lock().settings.diagnostics
+        //self.state.lock().settings.diagnostics
+        false
     }
 
     pub fn set_authenticated_user_info(
@@ -406,11 +408,11 @@ impl Telemetry {
 
         telemetry::event!(
             event_type,
-            conversation_id = event.conversation_id,
+            //conversation_id = event.conversation_id,
             kind = event.kind,
             phase = event.phase,
             message_id = event.message_id,
-            model = event.model,
+            //model = event.model,
             model_provider = event.model_provider,
             response_latency = event.response_latency,
             error_message = event.error_message,
@@ -596,9 +598,8 @@ impl Telemetry {
         Ok(Request::builder()
             .method(Method::POST)
             .uri(
-                self.http_client
-                    .build_zed_api_url("/telemetry/events", &[])?
-                    .as_ref(),
+            "bruh"
+                //self.http_client.build_zed_api_url("/telemetry/events", &[])?.as_ref(),
             )
             .header("Content-Type", "application/json")
             .header("x-zed-checksum", checksum)
@@ -629,19 +630,17 @@ impl Telemetry {
             (
                 json_bytes,
                 EventRequestBody {
-                    system_id: state.system_id.as_deref().map(Into::into),
-                    installation_id: state.installation_id.as_deref().map(Into::into),
-                    session_id: state.session_id.clone(),
-                    metrics_id: state.metrics_id.as_deref().map(Into::into),
+                    //system_id: state.system_id.as_deref().map(Into::into),
+                    //installation_id: state.installation_id.as_deref().map(Into::into),
+                    //session_id: state.session_id.clone(),
+                    //metrics_id: state.metrics_id.as_deref().map(Into::into),
                     is_staff: state.is_staff,
                     app_version: state.app_version.clone(),
                     os_name: state.os_name.clone(),
                     os_version: state.os_version.clone(),
                     architecture: state.architecture.to_string(),
 
-                    release_channel: state
-                        .release_channel
-                        .map(|channel| channel.display_name().to_owned()),
+                    //release_channel: state.release_channel.map(|channel| channel.display_name().to_owned()),
                     events,
                 },
             )
