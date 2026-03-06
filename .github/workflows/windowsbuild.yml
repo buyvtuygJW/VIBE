@@ -27,16 +27,34 @@ jobs:
           override: true
 
       # --- Step 3: Detect Visual Studio / Build Tools ---
-      - name: Locate Visual Studio
+      - name: Setup MSVC environment
         shell: pwsh
         run: |
-          $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-          if (-not $vsPath) { throw "Visual Studio with required VC tools not found" }
-          Write-Host "Visual Studio Path: $vsPath"
-          # Setup VS environment
-          $vcVars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
-          & cmd /c "$vcVars && set" | Out-File -FilePath env.txt
-          Get-Content env.txt | ForEach-Object { $name, $value = ($_ -split '=',2); if ($name) { Write-Host "$name=$value" } }
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+
+          if (!(Test-Path $vswhere)) {
+              throw "vswhere not found"
+          }
+
+          $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+
+          if (!$vsPath) {
+              throw "Visual Studio with C++ tools not found"
+          }
+
+          Write-Host "VS Path: $vsPath"
+
+          $vcvars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+
+          if (!(Test-Path $vcvars)) {
+              throw "vcvars64.bat not found"
+          }
+
+          cmd /c "`"$vcvars`" && set" | ForEach-Object {
+              if ($_ -match "^(.*?)=(.*)$") {
+                  echo "$($_)" >> $env:GITHUB_ENV
+              }
+          }
 
       # --- Step 4: Ensure CMake is installed ---
       - name: Install CMake
