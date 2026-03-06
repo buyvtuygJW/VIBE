@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use ai_onboarding::{AgentPanelOnboardingCard, PlanDefinitions};
+use ai_onboarding::{AgentPanelOnboardingCard};//PlanDefinitions
 use client::zed_urls;
 use gpui::{AnyElement, App, IntoElement, RenderOnce, Window};
 use ui::{Divider, Tooltip, prelude::*};
@@ -31,7 +31,7 @@ impl RenderOnce for EndTrialUpsell {
                     )
                     .child(Divider::horizontal()),
             )
-            .child(PlanDefinitions.pro_plan())
+            //.child(PlanDefinitions.pro_plan())
             .child(
                 Button::new("cta-button", "Upgrade to Zed Pro")
                     .full_width()
@@ -61,8 +61,8 @@ impl RenderOnce for EndTrialUpsell {
                             .buffer_font(cx),
                     )
                     .child(Divider::horizontal()),
-            )
-            .child(PlanDefinitions.free_plan());
+            );
+            //.child(PlanDefinitions.free_plan());
 
         AgentPanelOnboardingCard::new()
             .child(Headline::new("Your Zed Pro Trial has expired"))
