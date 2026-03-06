@@ -6,7 +6,7 @@ use gpui::{Entity, IntoElement, ParentElement};
 use language_model::{LanguageModelRegistry, ZED_CLOUD_PROVIDER_ID};
 use ui::prelude::*;
 
-use crate::{AgentPanelOnboardingCard, ApiKeysWithoutProviders, ZedAiOnboarding};
+use crate::{AgentPanelOnboardingCard, ApiKeysWithoutProviders};
 
 pub struct AgentPanelOnboarding {
     user_store: Entity<UserStore>,
@@ -52,38 +52,11 @@ impl AgentPanelOnboarding {
     }
 }
 
+//cleaned to not depend on zedai onboarding
 impl Render for AgentPanelOnboarding {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let enrolled_in_trial = self
-            .user_store
-            .read(cx)
-            .plan()
-            .is_some_and(|plan| plan == Plan::ZedProTrial);
-        let is_pro_user = self
-            .user_store
-            .read(cx)
-            .plan()
-            .is_some_and(|plan| plan == Plan::ZedPro);
-
-        AgentPanelOnboardingCard::new()
-            .child(
-                ZedAiOnboarding::new(
-                    self.client.clone(),
-                    &self.user_store,
-                    self.continue_with_zed_ai.clone(),
-                    cx,
-                )
-                .with_dismiss({
-                    let callback = self.continue_with_zed_ai.clone();
-                    move |window, cx| callback(window, cx)
-                }),
-            )
-            .map(|this| {
-                if enrolled_in_trial || is_pro_user || self.has_configured_providers {
-                    this
-                } else {
-                    this.child(ApiKeysWithoutProviders::new())
-                }
+    
+        AgentPanelOnboardingCard::new().map(|this| {this.child(ApiKeysWithoutProviders::new())
             })
     }
 }
