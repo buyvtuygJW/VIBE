@@ -82,6 +82,27 @@ impl ZedAiOnboarding {
         self
     }
 
+    fn render_dismiss_button(&self) -> Option<AnyElement> {
+        self.dismiss_onboarding.as_ref().map(|dismiss_callback| {
+            let callback = dismiss_callback.clone();
+
+            h_flex()
+                .absolute()
+                .top_0()
+                .right_0()
+                .child(
+                    IconButton::new("dismiss_onboarding", IconName::Close)
+                        .icon_size(IconSize::Small)
+                        .tooltip(Tooltip::text("Dismiss"))
+                        .on_click(move |_, window, cx| {
+                            telemetry::event!("Banner Dismissed", source = "AI Onboarding",);
+                            callback(window, cx)
+                        }),
+                )
+                .into_any_element()
+        })
+    }
+
 fn render_pro_plan_state(&self, _cx: &mut App) -> AnyElement {
         v_flex()
             .gap_1()
@@ -114,7 +135,8 @@ impl RenderOnce for ZedAiOnboarding {
                 //Some(Plan::ZedPro) => self.render_pro_plan_state(cx),
                 //Some(Plan::ZedStudent) => self.render_student_plan_state(cx),
             }
-        } //else {self.render_sign_in_disclaimer(cx)}
+        }else{self.render_pro_plan_state(cx)}
+         //else {self.render_sign_in_disclaimer(cx)}
     }
 }
 
