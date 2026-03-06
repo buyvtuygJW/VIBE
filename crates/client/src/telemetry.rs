@@ -549,9 +549,9 @@ impl Telemetry {
             }
         };
 
-        let signed_in = state.metrics_id.is_some();
+        //let signed_in = state.metrics_id.is_some();
         let event_wrapper = EventWrapper {
-            signed_in,
+            //signed_in,
             milliseconds_since_first_event,
             event,
         };
