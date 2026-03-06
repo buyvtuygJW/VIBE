@@ -9,7 +9,8 @@ mod agent_panel_onboarding_content;
 pub use agent_api_keys_onboarding::{ApiKeysWithProviders, ApiKeysWithoutProviders};
 pub use agent_panel_onboarding_card::AgentPanelOnboardingCard;
 pub use agent_panel_onboarding_content::AgentPanelOnboarding;
-use cloud_api_types::Plan;
+
+//use cloud_api_types::Plan;
 //removed ai_upsell_card,edit_prediction_onboarding_content,pub use plan_definitions::PlanDefinitions and pub use young_account_banner::YoungAccountBanner.
 
 use std::sync::Arc;
@@ -112,7 +113,7 @@ fn render_pro_plan_state(&self, _cx: &mut App) -> AnyElement {
                     .color(Color::Muted)
                     .mb_2(),
             )
-            .child(PlanDefinitions.pro_plan())
+            //.child(PlanDefinitions.pro_plan())
             .children(self.render_dismiss_button())
             .into_any_element()
     }
@@ -126,7 +127,7 @@ impl RenderOnce for ZedAiOnboarding {
     fn render(self, _window: &mut ui::Window, cx: &mut App) -> impl IntoElement {
         if matches!(self.sign_in_status, SignInStatus::SignedIn) {
             match self.plan {
-            	None => self.render_pro_plan_state(cx),//meme.
+            	None => self.render_pro_plan_state(cx) //meme.
 
             	
                 //None => self.render_free_plan_state(cx),
