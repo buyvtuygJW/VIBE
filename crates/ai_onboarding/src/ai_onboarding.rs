@@ -82,16 +82,33 @@ impl ZedAiOnboarding {
         self
     }
 
+fn render_pro_plan_state(&self, _cx: &mut App) -> AnyElement {
+        v_flex()
+            .gap_1()
+            .child(Headline::new("Welcome to Zed Pro"))
+            .child(
+                Label::new("Here's what you get:")
+                    .color(Color::Muted)
+                    .mb_2(),
+            )
+            .child(PlanDefinitions.pro_plan())
+            .children(self.render_dismiss_button())
+            .into_any_element()
+    }
 
-//deleted>render_dismiss_button,render_sign_in_disclaimer,render_free_plan_state,render_trial_state,render_pro_plan_state,render_student_plan_state
 
+//deleted>render_dismiss_button,render_sign_in_disclaimer,render_free_plan_state,render_trial_state,render_student_plan_state
+//kept,render_pro_plan_state to have some stock ui
 }
 
 impl RenderOnce for ZedAiOnboarding {
     fn render(self, _window: &mut ui::Window, cx: &mut App) -> impl IntoElement {
         if matches!(self.sign_in_status, SignInStatus::SignedIn) {
             match self.plan {
-                None => self.render_free_plan_state(cx),
+            	None => self.render_pro_plan_state(cx),//meme.
+
+            	
+                //None => self.render_free_plan_state(cx),
                 //Some(Plan::ZedFree) => self.render_free_plan_state(cx),
                 //Some(Plan::ZedProTrial) => self.render_trial_state(cx),
                 //Some(Plan::ZedPro) => self.render_pro_plan_state(cx),
