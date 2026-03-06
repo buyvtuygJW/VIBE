@@ -1098,13 +1098,19 @@ struct ZedAiConfiguration {
 
 	/**
 	//extracted out
-                this.child(YoungAccountBanner).child(
+	if self.account_too_young {
+            this.child(YoungAccountBanner).child(
                     Button::new("upgrade", "Upgrade to Pro")
                         .style(ui::ButtonStyle::Tinted(ui::TintColor::Accent))
                         .full_width()
                         .on_click(|_, _, cx| cx.open_url(&zed_urls::upgrade_to_zed_pro_url(cx))),
                 )
             } else {
+                this.text_sm()
+                    .child(subscription_text)
+                    .child(manage_subscription_buttons)
+            }
+                
             */
 impl RenderOnce for ZedAiConfiguration {
     fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
@@ -1171,12 +1177,9 @@ impl RenderOnce for ZedAiConfiguration {
         }
 
         v_flex().gap_2().w_full().map(|this| {
-            if self.account_too_young {
-            
-                this.text_sm()
+            this.text_sm()
                     .child(subscription_text)
                     .child(manage_subscription_buttons)
-            }
         })
     }
 }
