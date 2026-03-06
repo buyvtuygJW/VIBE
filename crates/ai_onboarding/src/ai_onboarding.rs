@@ -137,9 +137,10 @@ fn render_pro_plan_state(&self, _cx: &mut App) -> AnyElement {
 impl RenderOnce for ZedAiOnboarding {
     fn render(self, _window: &mut ui::Window, cx: &mut App) -> impl IntoElement {
         if matches!(self.sign_in_status, SignInStatus::SignedIn) {
-        	 if let None = self.plan {self.render_pro_plan_state(cx)}else{self.render_pro_plan_state(cx)}//meme.
-        	 
-        }
+        	if self.plan.is_none() {self.render_pro_plan_state(cx) } else {self.render_pro_plan_state(cx)}
+	    } else {
+	        self.render_pro_plan_state(cx)
+	    }
          //else {self.render_sign_in_disclaimer(cx)}
     }
 }
