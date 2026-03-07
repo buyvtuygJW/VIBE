@@ -1,0 +1,15 @@
+nuked upload minidump and for loop in crashreport.
+
+/**
+for CrashReport {
+                    metadata,
+                    minidump_contents,
+                } in crashes
+                {
+                    if let Some(metadata) = serde_json::from_str(&metadata).log_err() {
+                        upload_minidump(client.clone(), endpoint, minidump_contents, &metadata)
+                            .await
+                            .log_err();
+                    }
+                }
+*/

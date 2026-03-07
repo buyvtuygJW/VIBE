@@ -1,1 +1,1 @@
-only keep files start with agent name, as those are generic non zed ai commericial plan related code
+commented out parts that used 3 | use ai_onboarding::{AgentPanelOnboardingCard, PlanDefinitions};

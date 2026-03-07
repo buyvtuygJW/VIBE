@@ -3,7 +3,7 @@ use client::{Client, telemetry::MINIDUMP_ENDPOINT};
 use feature_flags::FeatureFlagAppExt;
 use futures::{AsyncReadExt, TryStreamExt};
 use gpui::{App, AppContext as _, SerializedThreadTaskTimings};
-use http_client::{self, AsyncBody, HttpClient, Request};
+use http_client::{self, AsyncBody, Request};//HttpClient
 use log::info;
 use project::Project;
 use proto::{CrashReport, GetCrashFilesResponse};
@@ -21,6 +21,19 @@ use crate::STARTUP_TIME;
 
 const MAX_HANG_TRACES: usize = 3;
 
+/**
+for CrashReport {
+                    metadata,
+                    minidump_contents,
+                } in crashes
+                {
+                    if let Some(metadata) = serde_json::from_str(&metadata).log_err() {
+                        upload_minidump(client.clone(), endpoint, minidump_contents, &metadata)
+                            .await
+                            .log_err();
+                    }
+                }
+*/
 pub fn init(client: Arc<Client>, cx: &mut App) {
     monitor_hangs(cx);
 
@@ -65,17 +78,7 @@ pub fn init(client: Arc<Client>, cx: &mut App) {
                 let Some(endpoint) = MINIDUMP_ENDPOINT.as_ref() else {
                     return Ok(());
                 };
-                for CrashReport {
-                    metadata,
-                    minidump_contents,
-                } in crashes
-                {
-                    if let Some(metadata) = serde_json::from_str(&metadata).log_err() {
-                        upload_minidump(client.clone(), endpoint, minidump_contents, &metadata)
-                            .await
-                            .log_err();
-                    }
-                }
+                
 
                 anyhow::Ok(())
             })
