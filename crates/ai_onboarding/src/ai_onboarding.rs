@@ -18,7 +18,8 @@ use std::sync::Arc;
 
 use client::{Client, UserStore, zed_urls};
 use gpui::{AnyElement, Entity, IntoElement, ParentElement};
-use ui::{Divider, RegisterComponent, Tooltip, prelude::*};
+use ui::{RegisterComponent, Tooltip, prelude::*};
+//use ui::{Divider, RegisterComponent, Tooltip, prelude::*};//ori code
 
 #[derive(PartialEq)]
 pub enum SignInStatus {

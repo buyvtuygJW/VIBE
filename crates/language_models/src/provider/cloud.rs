@@ -1092,7 +1092,7 @@ struct ZedAiConfiguration {
     plan: Option<Plan>,
     subscription_period: Option<(DateTime<Utc>, DateTime<Utc>)>,
     eligible_for_trial: bool,
-    account_too_young: bool,
+    //account_too_young: bool,
     sign_in_callback: Arc<dyn Fn(&mut Window, &mut App) + Send + Sync>,
 }
 
@@ -1217,7 +1217,7 @@ impl Render for ConfigurationView {
             plan: user_store.plan(),
             subscription_period: user_store.subscription_period(),
             eligible_for_trial: user_store.trial_started_at().is_none(),
-            account_too_young: user_store.account_too_young(),
+            //account_too_young: user_store.account_too_young(),
             sign_in_callback: self.sign_in_callback.clone(),
         }
     }
@@ -1250,7 +1250,7 @@ impl Component for ZedAiConfiguration {
                     .is_some()
                     .then(|| (Utc::now(), Utc::now() + chrono::Duration::days(7))),
                 eligible_for_trial,
-                account_too_young,
+                //account_too_young,
                 sign_in_callback: Arc::new(|_, _| {}),
             }
             .into_any_element()

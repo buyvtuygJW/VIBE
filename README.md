@@ -1,15 +1,13 @@
-# Zed
+# Vibe
+[![CI](https://github.com/buyvtuygJW/VIBE/actions/workflows/run_tests.yml/badge.svg)](https://github.com/buyvtuygJW/VIBEactions/workflows/run_tests.yml)
 
-[![Zed](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zed-industries/zed/main/assets/badge/v0.json)](https://zed.dev)
-[![CI](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml/badge.svg)](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml)
-
-Welcome to Zed, a high-performance, multiplayer code editor from the creators of [Atom](https://github.com/atom/atom) and [Tree-sitter](https://github.com/tree-sitter/tree-sitter).
+Welcome to Vibe. a fork of Zed, a high-performance, multiplayer code editor from the creators of [Atom](https://github.com/atom/atom) and [Tree-sitter](https://github.com/tree-sitter/tree-sitter).
 
 ---
 
 ### Installation
 
-On macOS, Linux, and Windows you can [download Zed directly](https://zed.dev/download) or install Zed via your local package manager ([macOS](https://zed.dev/docs/installation#macos)/[Linux](https://zed.dev/docs/linux#installing-via-a-package-manager)/[Windows](https://zed.dev/docs/windows#package-managers)).
+On macOS, Linux, and Windows you can [download Vibe directly]
 
 Other platforms are not yet available:
 
@@ -25,9 +23,8 @@ Other platforms are not yet available:
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for ways you can contribute to Zed.
 
-Also... we're hiring! Check out our [jobs](https://zed.dev/jobs) page for open roles.
 
-### Licensing
+### Upstream Licensing
 
 License information for third party dependencies must be correctly provided for CI to pass.
 
@@ -39,8 +36,7 @@ We use [`cargo-about`](https://github.com/EmbarkStudios/cargo-about) to automati
 
 ## Sponsorship
 
-Zed is developed by **Zed Industries, Inc.**, a for-profit company.
 
+Zed is developed by **Zed Industries, Inc.**, a for-profit company.
 If you’d like to financially support the project, you can do so via GitHub Sponsors.
-Sponsorships go directly to Zed Industries and are used as general company revenue.
 There are no perks or entitlements associated with sponsorship.
