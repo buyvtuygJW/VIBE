@@ -152,6 +152,7 @@ fn for_snowflake(
             map.insert(
                 "release_channel".to_string(),
                 //body.release_channel.clone().into(),
+                "",
             );
             //map.insert("signed_in".to_string(), event.signed_in.into());
             map.insert("checksum_matched".to_string(), checksum_matched.into());
@@ -174,7 +175,7 @@ fn for_snowflake(
             //user_id: body.metrics_id.clone(),
             //device_id: body.system_id.clone(),
             user_id: 0,
-            device_id: 0,
+            device_id: "0",
             event_type,
             event_properties,
             user_properties,

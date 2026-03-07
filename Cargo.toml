@@ -918,6 +918,8 @@ zed_actions = { codegen-units = 1 }
 debug = "limited"
 lto = "thin"
 codegen-units = 1
+debug = 0
+#strip debugsymbol prevent>release` profile [optimized + debuginfo] 
 
 [profile.release.package]
 zed = { codegen-units = 16 }
