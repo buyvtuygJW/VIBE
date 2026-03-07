@@ -164,7 +164,8 @@ impl TelemetryLogView {
             received_at: OffsetDateTime::now_utc(),
             event_type,
             event_properties,
-            signed_in: event_wrapper.signed_in,
+            //signed_in: event_wrapper.signed_in,
+            signed_in: true,
             collapsed_md: None,
             expanded_md: None,
         };
