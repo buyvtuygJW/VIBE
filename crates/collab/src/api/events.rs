@@ -102,7 +102,7 @@ pub async fn post_events(
             if let Some(data) = serde_json::to_vec(&row).log_err() {
                 request = request.records(
                     aws_sdk_kinesis::types::PutRecordsRequestEntry::builder()
-                        .partition_key(request_body.system_id.clone().unwrap_or_default())
+                        //.partition_key(request_body.system_id.clone().unwrap_or_default())
                         .data(data.into())
                         .build()
                         .unwrap(),
@@ -151,9 +151,9 @@ fn for_snowflake(
             map.insert("architecture".to_string(), body.architecture.clone().into());
             map.insert(
                 "release_channel".to_string(),
-                body.release_channel.clone().into(),
+                //body.release_channel.clone().into(),
             );
-            map.insert("signed_in".to_string(), event.signed_in.into());
+            //map.insert("signed_in".to_string(), event.signed_in.into());
             map.insert("checksum_matched".to_string(), checksum_matched.into());
             if let Some(country_code) = country_code.as_ref() {
                 map.insert("country".to_string(), country_code.clone().into());
@@ -171,8 +171,10 @@ fn for_snowflake(
 
         SnowflakeRow {
             time: timestamp,
-            user_id: body.metrics_id.clone(),
-            device_id: body.system_id.clone(),
+            //user_id: body.metrics_id.clone(),
+            //device_id: body.system_id.clone(),
+            user_id: 0,
+            device_id: 0,
             event_type,
             event_properties,
             user_properties,

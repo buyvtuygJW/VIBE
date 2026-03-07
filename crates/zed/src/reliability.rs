@@ -3,7 +3,7 @@ use client::{Client, telemetry::MINIDUMP_ENDPOINT};
 use feature_flags::FeatureFlagAppExt;
 use futures::{AsyncReadExt, TryStreamExt};
 use gpui::{App, AppContext as _, SerializedThreadTaskTimings};
-use http_client::{self, AsyncBody, Request};//HttpClient
+use http_client::{self };//HttpClient,AsyncBody, Request
 use log::info;
 use project::Project;
 use proto::{CrashReport, GetCrashFilesResponse};
@@ -14,7 +14,7 @@ use reqwest::{
 use serde::Deserialize;
 use smol::stream::StreamExt;
 use std::{ffi::OsStr, fs, sync::Arc, thread::ThreadId, time::Duration};
-use sysinfo::{MemoryRefreshKind, RefreshKind, System};
+//use sysinfo::{MemoryRefreshKind, RefreshKind, System};
 use util::ResultExt;
 
 use crate::STARTUP_TIME;
