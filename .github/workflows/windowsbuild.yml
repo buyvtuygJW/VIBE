@@ -25,6 +25,9 @@ jobs:
           target: x86_64-pc-windows-msvc
           profile: minimal
           override: true
+        
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
 
       # --- Step 3: Detect Visual Studio / Build Tools ---
       - name: Setup MSVC environment
@@ -80,15 +83,17 @@ jobs:
 
       # --- Step 7: Debug build ---
       - name: Cargo debug build
-        run: cargo run
+        run: cargo build
 
       # --- Step 8: Release build ---
       - name: Cargo release build
-        run: cargo run --release
+        run: cargo build --release
+        #run: cargo run --release (chatgpt say>CI should not run binaries unless needed.)
 
-      # --- Step 9: Run workspace tests ---
+      # --- Step 9: Run workspace tests ---      
       - name: Run tests
-        run: cargo test --workspace
+        run: cargo test --workspace --release
+        # run: cargo test --workspace # ori zed slow test
 
       # --- Optional: PostgreSQL setup notes ---
       - name: PostgreSQL notes
