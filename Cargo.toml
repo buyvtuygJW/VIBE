@@ -915,10 +915,12 @@ ui_input = { codegen-units = 1 }
 zed_actions = { codegen-units = 1 }
 
 [profile.release]
-debug = "limited"
+#ori>debug = "limited"
 lto = "thin"
 codegen-units = 1
+opt-level = 3
 debug = 0
+strip = "symbols"
 #strip debugsymbol prevent>release` profile [optimized + debuginfo] 
 
 [profile.release.package]
