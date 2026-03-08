@@ -1551,10 +1551,10 @@
     // When to show edit predictions previews in buffer.
     // This setting takes two possible values:
     // 1. Display predictions inline when there are no language server completions available.
-    //     "mode": "eager"
+         "mode": "eager"
     // 2. Display predictions inline only when holding a modifier key (alt by default).
     //     "mode": "subtle"
-    "mode": "eager",
+    
     // Copilot-specific settings
     // "copilot": {
     //   "enterprise_uri": "",
@@ -1568,11 +1568,6 @@
       "proxy_no_verify": null,
       "enable_next_edit_suggestions": true,
     },
-    "local_llamcpp(custom inject to json)": {
-      "api_url": "http://127.0.0.1:8080/",
-      "model": "-",
-      "max_tokens": 8192,
-    },
     "codestral": {
       "api_url": "https://codestral.mistral.ai",
       "model": "codestral-latest",
@@ -1583,7 +1578,7 @@
       // When disabled, Sweep may collect data including buffer contents,
       // diagnostics, file paths, repository names, and generated predictions
       // to improve the service.
-      "privacy_mode": false,
+      "privacy_mode": true,
     },
     "ollama": {
       "api_url": "http://localhost:11434",
