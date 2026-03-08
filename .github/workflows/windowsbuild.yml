@@ -98,14 +98,14 @@ jobs:
       - name: Upload Debug Binaries
         uses: actions/upload-artifact@v4
         with:
-          name: debug-binaries
+          name: Vibe_debug-binaries-win
           path: target/debug/zed*
 
 
       - name: Upload release binaries
         uses: actions/upload-artifact@v4
         with:
-          name: release-binaries
+          name: Vibe_rel-binaries-win
           path: target/release/zed*   # works cross-platform
           
       # --- Optional: PostgreSQL setup notes ---
