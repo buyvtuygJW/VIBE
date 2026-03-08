@@ -107,12 +107,12 @@ jobs:
         with:
           name: Vibe_rel-binaries-win
           path: target/release/zed*   # works cross-platform
-          
-       - name: Create GitHub Release
+
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1.1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}#auto no need create
         with:
           tag_name: v1.0.0
           release_name: Release v1.0.0
@@ -120,6 +120,11 @@ jobs:
           prerelease: false
 
       - name: Upload artifact to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release binary
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
