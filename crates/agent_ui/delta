@@ -1,1 +1,3 @@
 commented out parts that used 3 | use ai_onboarding::{AgentPanelOnboardingCard, PlanDefinitions};
+
+allow to have no api key for llamacpp

@@ -1568,6 +1568,11 @@
       "proxy_no_verify": null,
       "enable_next_edit_suggestions": true,
     },
+    "local_llamcpp(custom inject to json)": {
+      "api_url": "http://127.0.0.1:8080/",
+      "model": "-",
+      "max_tokens": 8192,
+    },
     "codestral": {
       "api_url": "https://codestral.mistral.ai",
       "model": "codestral-latest",

@@ -233,9 +233,7 @@ fn save_provider_to_settings(
     }
 
     let api_url = input.api_url.read(cx).text(cx);
-    if api_url.is_empty() {
-        return Task::ready(Err("API URL cannot be empty".into()));
-    }
+    //if api_url.is_empty() {return Task::ready(Err("API URL cannot be empty".into()));}//no lowiq checking
 
     let api_key = input.api_key.read(cx).text(cx);
     if api_key.is_empty() {
@@ -257,7 +255,16 @@ fn save_provider_to_settings(
     }
 
     let fs = <dyn Fs>::global(cx);
-    let task = cx.write_credentials(&api_url, "Bearer", api_key.as_bytes());
+    //let task = cx.write_credentials(&api_url, "Bearer", api_key.as_bytes());//ori naive FORCE MUST HAVE API KEY
+
+	// Allow empty API key
+	let task = if api_key.is_empty() {
+	    // No key to write, return a dummy successful future
+	    Task::ready(Ok(()))
+	} else {
+	    cx.write_credentials(&api_url, "Bearer", api_key.as_bytes())
+	};
+    
     cx.spawn(async move |cx| {
         task.await
             .map_err(|_| SharedString::from("Failed to write API key to keychain"))?;
