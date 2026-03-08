@@ -95,6 +95,13 @@ jobs:
       #  run: cargo test --workspace --release
         # run: cargo test --workspace # ori zed slow test
 
+      - name: Upload Debug Binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-binaries
+          path: target/debug/zed*
+
+
       - name: Upload release binaries
         uses: actions/upload-artifact@v3
         with:
