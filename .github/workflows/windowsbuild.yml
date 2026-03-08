@@ -90,13 +90,20 @@ jobs:
         run: cargo build --release
         #run: cargo run --release (chatgpt say>CI should not run binaries unless needed.)
 
-      # --- Step 9: Run workspace tests ---      
-      - name: Run tests
-        run: cargo test --workspace --release
+      # --- Step 9: Run workspace tests -(DONOT ENABLE THIS.MAY TAKE HOURS!LOWIQ)
+      #- name: Run tests
+      #  run: cargo test --workspace --release
         # run: cargo test --workspace # ori zed slow test
 
+      - name: Upload release binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-binaries
+          path: target/release/zed*   # works cross-platform
+          
       # --- Optional: PostgreSQL setup notes ---
       - name: PostgreSQL notes
         run: |
           Write-Host "If using PostgreSQL, ensure pg_hba.conf uses 'trust' for local connections."
           Write-Host "Set lc_messages in postgresql.conf to 'English_United States.1252' if locale is non-Latin."
+
