@@ -110,15 +110,13 @@ jobs:
           name: Vibe_rel-binaries-win
           path: target/release/zed*   # works cross-platform
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
+      - name: Create Tag and Release
+        run: |
+          VERSION="v$(date +'%Y.%m.%d.%H%M')"   # 👈 auto-generate version tag
+          echo "Creating release $VERSION"
+          gh release create "$VERSION" ./target/release/zed* --title "Release $VERSION" --notes "Automated release from main branch"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}#auto no need create
-        with:
-          tag_name: v1.0.0
-          release_name: Release ${{ github.ref_name }}
-          files: ./target/release/zed*
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
           
       # --- Optional: PostgreSQL setup notes ---
