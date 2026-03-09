@@ -112,8 +112,11 @@ jobs:
 
       - name: Create Tag and Release
         run: |
-          VERSION="v$(date +'%Y.%m.%d.%H%M')"   # 👈 auto-generate version tag
-          echo "Creating release $VERSION"
+          #VERSION="v$(date +'%Y.%m.%d.%H%M')"   # 👈 auto-generate version tag(linux)
+          $VERSION = "v{0:yyyy.MM.dd.HHmm}" -f (Get-Date)
+          Write-Host "Creating release $VERSION"
+          #gh release create $VERSION ./target/release/zed* `--title "Release $VERSION" ` --notes "Automated release from main branch"
+          #echo "Creating release $VERSION"
           gh release create "$VERSION" ./target/release/zed* --title "Release $VERSION" --notes "Automated release from main branch"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
