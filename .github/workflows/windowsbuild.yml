@@ -35,7 +35,7 @@ jobs:
           Write-Host "Visual Studio Path: $vsPath"
           # Setup VS environment
           $vcVars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
-          & cmd /c "$vcVars && set" | Out-File -FilePath env.txt
+          & cmd /c "`"$vcVars`" && set" | Out-File -FilePath env.txt
           Get-Content env.txt | ForEach-Object { $name, $value = ($_ -split '=',2); if ($name) { Write-Host "$name=$value" } }
 
       # --- Step 4: Ensure CMake is installed ---
