@@ -1,3 +1,4 @@
+removed http upload in reliabilit.rs
 nuked upload minidump and for loop in crashreport.
 
 /**

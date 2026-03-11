@@ -101,19 +101,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Vibe_debug-binaries-win
-          path: target/debug/zed*
+          path: target/debug/vibe*
 
 
       - name: Upload release binaries
         uses: actions/upload-artifact@v4
         with:
           name: Vibe_rel-binaries-win
-          path: target/release/zed*   # works cross-platform
+          path: target/release/vibe*   # works cross-platform
 
       - name: Package binaries
         shell: pwsh
         run: |
-          Compress-Archive -Path ./target/release/zed* -DestinationPath ./Vibe-rel_win.zip
+          Compress-Archive -Path ./target/release/vibe* -DestinationPath ./Vibe-rel_win.zip
          
       - name: Create Tag and Release
         run: |
