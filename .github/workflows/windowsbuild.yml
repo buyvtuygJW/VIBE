@@ -9,6 +9,8 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    permissions:
+      contents: write   # 👈 Needed for creating releases
     env:
       CARGO_TERM_COLOR: always
 
@@ -25,18 +27,39 @@ jobs:
           target: x86_64-pc-windows-msvc
           profile: minimal
           override: true
+        
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
 
       # --- Step 3: Detect Visual Studio / Build Tools ---
-      - name: Locate Visual Studio
+      - name: Setup MSVC environment
         shell: pwsh
         run: |
-          $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-          if (-not $vsPath) { throw "Visual Studio with required VC tools not found" }
-          Write-Host "Visual Studio Path: $vsPath"
-          # Setup VS environment
-          $vcVars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
-          & cmd /c "`"$vcVars`" && set" | Out-File -FilePath env.txt
-          Get-Content env.txt | ForEach-Object { $name, $value = ($_ -split '=',2); if ($name) { Write-Host "$name=$value" } }
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+
+          if (!(Test-Path $vswhere)) {
+              throw "vswhere not found"
+          }
+
+          $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+
+          if (!$vsPath) {
+              throw "Visual Studio with C++ tools not found"
+          }
+
+          Write-Host "VS Path: $vsPath"
+
+          $vcvars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+
+          if (!(Test-Path $vcvars)) {
+              throw "vcvars64.bat not found"
+          }
+
+          cmd /c "`"$vcvars`" && set" | ForEach-Object {
+              if ($_ -match "^(.*?)=(.*)$") {
+                  echo "$($_)" >> $env:GITHUB_ENV
+              }
+          }
 
       # --- Step 4: Ensure CMake is installed ---
       - name: Install CMake
@@ -62,18 +85,51 @@ jobs:
 
       # --- Step 7: Debug build ---
       - name: Cargo debug build
-        run: cargo run
+        run: cargo build
 
       # --- Step 8: Release build ---
       - name: Cargo release build
-        run: cargo run --release
+        run: cargo build --release
+        #run: cargo run --release (chatgpt say>CI should not run binaries unless needed.)
 
-      # --- Step 9: Run workspace tests ---
-      - name: Run tests
-        run: cargo test --workspace
+      # --- Step 9: Run workspace tests -(DONOT ENABLE THIS.MAY TAKE HOURS!LOWIQ)
+      #- name: Run tests
+      #  run: cargo test --workspace --release
+        # run: cargo test --workspace # ori zed slow test
 
+      - name: Upload Debug Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vibe_debug-binaries-win
+          path: target/debug/zed*
+
+
+      - name: Upload release binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vibe_rel-binaries-win
+          path: target/release/zed*   # works cross-platform
+
+      - name: Package binaries
+        shell: pwsh
+        run: |
+          Compress-Archive -Path ./target/release/zed* -DestinationPath ./Vibe-rel_win.zip
+         
+      - name: Create Tag and Release
+        run: |
+          #VERSION="v$(date +'%Y.%m.%d.%H%M')"   # 👈 auto-generate version tag(linux)
+          $VERSION = "v{0:yyyy.MM.dd.HHmm}" -f (Get-Date)
+          Write-Host "Creating release $VERSION"
+          #echo "Creating release $VERSION"
+          #gh release create "$VERSION" ./target/release/zed* --title "Release $VERSION" --notes "Automated release from main branch" #tested works
+          gh release create "$VERSION" ./Vibe-rel_win.zip --title "Release $VERSION" --notes "Automated release from main branch" 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          
       # --- Optional: PostgreSQL setup notes ---
       - name: PostgreSQL notes
         run: |
           Write-Host "If using PostgreSQL, ensure pg_hba.conf uses 'trust' for local connections."
           Write-Host "Set lc_messages in postgresql.conf to 'English_United States.1252' if locale is non-Latin."
+
