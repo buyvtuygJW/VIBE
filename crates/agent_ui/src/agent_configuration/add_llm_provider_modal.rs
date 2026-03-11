@@ -233,12 +233,10 @@ fn save_provider_to_settings(
     }
 
     let api_url = input.api_url.read(cx).text(cx);
-    //if api_url.is_empty() {return Task::ready(Err("API URL cannot be empty".into()));}//no lowiq checking
+    if api_url.is_empty() {return Task::ready(Err("API URL cannot be empty".into()));}
 
     let api_key = input.api_key.read(cx).text(cx);
-    if api_key.is_empty() {
-        return Task::ready(Err("API Key cannot be empty".into()));
-    }
+    //if api_key.is_empty() {return Task::ready(Err("API Key cannot be empty".into()));}//no lowiq checking
 
     let mut models = Vec::new();
     let mut model_names: HashSet<String> = HashSet::default();
