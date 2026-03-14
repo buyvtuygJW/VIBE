@@ -20,7 +20,7 @@ use project::{
     agent_server_store::{CLAUDE_AGENT_NAME, CODEX_NAME, GEMINI_NAME},
 };
 use serde::{Deserialize, Serialize};
-use settings::{LanguageModelProviderSetting, LanguageModelSelection};
+use settings::{LanguageModelProviderSetting, LanguageModelSelection, SettingsLocation};
 
 use feature_flags::{AgentV2FeatureFlag, FeatureFlagAppExt as _};
 use zed_actions::agent::{OpenClaudeAgentOnboardingModal, ReauthenticateAgent, ReviewBranchDiff};
@@ -400,7 +400,7 @@ impl AgentType {
     }
 
     //nemotron added, patch1,added.
-    fn get_current_model_display(&mut self, cx: &mut Context<Self>) -> SharedString {
+    fn get_current_model_display(&self, cx: &Context<Self>) -> SharedString {
         let agent_settings = AgentSettings::get(Some(SettingsLocation::Workspace), cx);
         if let Some(default_model) = &agent_settings.default_model {
             // We want to show the model name and provider
@@ -3213,6 +3213,12 @@ impl AgentPanel {
             base_label
         } else {
             format!("{} ({})", base_label, model_display).into()
+        };
+        let model_display = self.get_current_model_display(cx);
+        let selected_agent_label = if model_display == "No model selected".into() {
+            base_label
+        } else {
+            format!("{} ({})", base_label, model_display).into()
         }; //nemotrron patch1
 
         let (selected_agent_custom_icon, _) =
@@ -3226,8 +3232,9 @@ impl AgentPanel {
 
                 //(icon /* label ignored, we use selected_agent_label */,)
             } else {
-                //ori,nemoton patch  //(None, self.selected_agent.label())
-                (None /* label ignored */,)
+                (None, self.selected_agent.label())
+                //ori,bf nemoton patch  //(None, self.selected_agent.label())
+                //(None /* label ignored */,)
             };
 
         let active_thread = match &self.active_view {
