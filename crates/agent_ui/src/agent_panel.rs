@@ -582,7 +582,7 @@ pub struct AgentPanel {
 impl AgentPanel {
     //nemotron added, patch1,added.
     fn get_current_model_display(&self, cx: &mut Context<Self>) -> SharedString {
-        let agent_settings = AgentSettings::get(Some(SettingsLocation::Workspace), cx);
+        let agent_settings = AgentSettings::get(None, cx);
         if let Some(default_model) = &agent_settings.default_model {
             // We want to show the model name and provider
             let provider_id =
