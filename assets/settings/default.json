@@ -2048,10 +2048,9 @@
       "prettier": {
         "allowed": true,
       },
-      "language_servers": ["!vscode-html-language-server", "..."],
     },
     "HTML+ERB": {
-      "language_servers": ["!vscode-html-language-server", "herb", "!ruby-lsp", "..."],
+      "language_servers": ["herb", "!ruby-lsp", "..."],
     },
     "Java": {
       "prettier": {
@@ -2069,7 +2068,6 @@
       "prettier": {
         "allowed": true,
       },
-      "language_servers": ["!vscode-json-language-server", "..."],
     },
     "JSONC": {
       "prettier": {
@@ -2089,10 +2087,6 @@
         "allowed": true,
         "plugins": ["prettier-plugin-latex"],
       },
-    },
-    "lua": {
-      "formatter": "language_server",
-      "language_servers": ["lua-language-server", "..."],
     },
     "Markdown": {
       "format_on_save": "off",
@@ -2142,7 +2136,6 @@
     },
     "Rust": {
       "debuggers": ["CodeLLDB"],
-      "language_servers": ["rust-analyzer", "..."],
     },
     "SCSS": {
       "prettier": {
