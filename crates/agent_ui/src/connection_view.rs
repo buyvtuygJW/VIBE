@@ -1105,7 +1105,7 @@ impl ConnectionView {
         } else {
             LoadError::Other(format!("{:#}", err).into())
         };
-        self.emit_load_error_telemetry(&load_error);
+        //self.emit_load_error_telemetry(&load_error);//temp disable telemetry
         self.set_server_state(ServerState::LoadError(load_error), cx);
     }
 

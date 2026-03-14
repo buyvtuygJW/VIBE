@@ -396,6 +396,29 @@ impl AgentType {
         }
     }
 
+    //nemotron added, patch1,added.
+    fn get_current_model_display(&self, cx: &Context<Self>) -> SharedString {
+        let agent_settings = AgentSettings::get(Some(SettingsLocation::Workspace), cx);
+        if let Some(default_model) = &agent_settings.default_model {
+            // We want to show the model name and provider
+            let provider_id =
+                LanguageModelProviderId(gpui::SharedString::from(default_model.provider.0.clone()));
+            let registry = LanguageModelRegistry::read_global(cx);
+            if let Some(provider) = registry.provider(&provider_id) {
+                if let Some(model) = provider
+                    .provided_models(cx)
+                    .iter()
+                    .find(|m| m.id().0 == default_model.model.as_str())
+                {
+                    return format!("{} ({})", model.name().0, provider.name().0).into();
+                }
+            }
+            // Fallback to just showing the model id and provider id
+            return format!("{} ({})", default_model.model, default_model.provider.0).into();
+        }
+        "No model selected".into()
+    }
+
     fn icon(&self) -> Option<IconName> {
         match self {
             Self::NativeAgent | Self::TextThread => None,
@@ -3177,17 +3200,30 @@ impl AgentPanel {
         let agent_server_store = self.project.read(cx).agent_server_store().clone();
         let focus_handle = self.focus_handle(cx);
 
-        let (selected_agent_custom_icon, selected_agent_label) =
+        //nemotrron patch1 to try ui
+        let base_label = match &self.selected_agent {
+            AgentType::Custom { name, .. } => name.clone(),
+            _ => self.selected_agent.label(),
+        };
+        let model_display = self.get_current_model_display(cx);
+        let selected_agent_label = if model_display == "No model selected".into() {
+            base_label
+        } else {
+            format!("{} ({})", base_label, model_display).into()
+        }; //nemotrron patch1
+
+        let (selected_agent_custom_icon, _) =
             if let AgentType::Custom { name, .. } = &self.selected_agent {
                 let store = agent_server_store.read(cx);
-                let icon = store.agent_icon(&ExternalAgentServerName(name.clone()));
 
-                let label = store
-                    .agent_display_name(&ExternalAgentServerName(name.clone()))
-                    .unwrap_or_else(|| self.selected_agent.label());
-                (icon, label)
+                //let label = store.agent_display_name(&ExternalAgentServerName(name.clone())).unwrap_or_else(|| self.selected_agent.label());//Ori,bf nemmotron patch
+                //(icon, label)
+
+                let icon = store.agent_icon(&ExternalAgentServerName(name.clone()));
+                (icon /* label ignored, we use selected_agent_label */,)
             } else {
-                (None, self.selected_agent.label())
+                //ori,nemoton patch  //(None, self.selected_agent.label())
+                (None /* label ignored */,)
             };
 
         let active_thread = match &self.active_view {

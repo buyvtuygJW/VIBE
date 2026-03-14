@@ -3,7 +3,7 @@ use client::{Client, telemetry::MINIDUMP_ENDPOINT};
 use feature_flags::FeatureFlagAppExt;
 use futures::{AsyncReadExt, TryStreamExt};
 use gpui::{App, AppContext as _, SerializedThreadTaskTimings};
-use http_client::{self };//HttpClient,AsyncBody, Request
+//use http_client::{self,HttpClient,AsyncBody, Request };//not used no telemetry
 use log::info;
 use project::Project;
 use proto::{CrashReport, GetCrashFilesResponse};
@@ -33,6 +33,9 @@ for CrashReport {
                             .log_err();
                     }
                 }
+let Some(endpoint) = MINIDUMP_ENDPOINT.as_ref() else {
+                    return Ok(());
+                };
 */
 pub fn init(client: Arc<Client>, cx: &mut App) {
     monitor_hangs(cx);
@@ -74,11 +77,7 @@ pub fn init(client: Arc<Client>, cx: &mut App) {
                 .request(proto::GetCrashFiles {});
             cx.background_spawn(async move {
                 let GetCrashFilesResponse { crashes } = request.await?;
-
-                let Some(endpoint) = MINIDUMP_ENDPOINT.as_ref() else {
-                    return Ok(());
-                };
-                
+        
 
                 anyhow::Ok(())
             })
@@ -221,7 +220,6 @@ fn save_hang_trace(
 
 //REMOVED >pub async fn upload_previous_minidumps(client: Arc<Client>) -> anyhow::Result<()> { &async fn upload_minidump(
 pub async fn upload_previous_minidumps(client: Arc<Client>) -> anyhow::Result<()> {
-    
     Ok(())
 }
 //async fn upload_build_timings(_client: Arc<Client>) -> Result<()> {
