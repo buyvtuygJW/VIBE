@@ -399,29 +399,6 @@ impl AgentType {
         }
     }
 
-    //nemotron added, patch1,added.
-    fn get_current_model_display(&self, cx: &Context<Self>) -> SharedString {
-        let agent_settings = AgentSettings::get(Some(SettingsLocation::Workspace), cx);
-        if let Some(default_model) = &agent_settings.default_model {
-            // We want to show the model name and provider
-            let provider_id =
-                LanguageModelProviderId(gpui::SharedString::from(default_model.provider.0.clone()));
-            let registry = LanguageModelRegistry::read_global(cx);
-            if let Some(provider) = registry.provider(&provider_id) {
-                if let Some(model) = provider
-                    .provided_models(cx)
-                    .iter()
-                    .find(|m| m.id().0 == default_model.model.as_str())
-                {
-                    return format!("{} ({})", model.name().0, provider.name().0).into();
-                }
-            }
-            // Fallback to just showing the model id and provider id
-            return format!("{} ({})", default_model.model, default_model.provider.0).into();
-        }
-        "No model selected".into()
-    }
-
     fn icon(&self) -> Option<IconName> {
         match self {
             Self::NativeAgent | Self::TextThread => None,
@@ -604,6 +581,29 @@ pub struct AgentPanel {
 }
 
 impl AgentPanel {
+    //nemotron added, patch1,added.
+    fn get_current_model_display(&self, cx: &mut Context<Self>) -> SharedString {
+        let agent_settings = AgentSettings::get_global(cx.app());
+        if let Some(default_model) = &agent_settings.default_model {
+            // We want to show the model name and provider
+            let provider_id =
+                LanguageModelProviderId(gpui::SharedString::from(default_model.provider.0.clone()));
+            let registry = LanguageModelRegistry::read_global(cx);
+            if let Some(provider) = registry.provider(&provider_id) {
+                if let Some(model) = provider
+                    .provided_models(cx)
+                    .iter()
+                    .find(|m| m.id().0 == default_model.model.as_str())
+                {
+                    return format!("{} ({})", model.name().0, provider.name().0).into();
+                }
+            }
+            // Fallback to just showing the model id and provider id
+            return format!("{} ({})", default_model.model, default_model.provider.0).into();
+        }
+        "No model selected".into()
+    }
+
     fn serialize(&mut self, cx: &mut App) {
         let Some(workspace_id) = self.workspace_id else {
             return;
@@ -3208,12 +3208,7 @@ impl AgentPanel {
             AgentType::Custom { name, .. } => name.clone(),
             _ => self.selected_agent.label(),
         };
-        let model_display = self.get_current_model_display(cx);
-        let selected_agent_label = if model_display == "No model selected".into() {
-            base_label
-        } else {
-            format!("{} ({})", base_label, model_display).into()
-        };
+
         let model_display = self.get_current_model_display(cx);
         let selected_agent_label = if model_display == "No model selected".into() {
             base_label
@@ -3227,7 +3222,7 @@ impl AgentPanel {
                 let icon = store.agent_icon(&ExternalAgentServerName(name.clone()));
                 let label = store
                     .agent_display_name(&ExternalAgentServerName(name.clone()))
-                    .unwrap_or_else(|| self.selected_agent.label()); //Ori,bf nemmotron patch
+                    .unwrap_or_else(|| selected_agent_label.clone()); //Ori,bf nemmotron patch
                 (icon, label)
 
                 //(icon /* label ignored, we use selected_agent_label */,)
