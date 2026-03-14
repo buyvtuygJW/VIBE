@@ -89,7 +89,6 @@ use zed_actions::{
 };
 //nemotron patch bugfix
 use crate::LanguageModelProviderId;
-use language_model::LanguageModelProviderId;
 
 const AGENT_PANEL_KEY: &str = "agent_panel";
 const RECENTLY_UPDATED_MENU_LIMIT: usize = 6;
@@ -583,7 +582,7 @@ pub struct AgentPanel {
 impl AgentPanel {
     //nemotron added, patch1,added.
     fn get_current_model_display(&self, cx: &mut Context<Self>) -> SharedString {
-        let agent_settings = AgentSettings::get_global(cx.app());
+        let agent_settings = AgentSettings::get(Some(SettingsLocation::Workspace), cx);
         if let Some(default_model) = &agent_settings.default_model {
             // We want to show the model name and provider
             let provider_id =
@@ -3210,7 +3209,7 @@ impl AgentPanel {
         };
 
         let model_display = self.get_current_model_display(cx);
-        let selected_agent_label = if model_display == "No model selected".into() {
+        let selected_agent_label = if model_display.to_string() == "No model selected" {
             base_label
         } else {
             format!("{} ({})", base_label, model_display).into()
@@ -3222,7 +3221,8 @@ impl AgentPanel {
                 let icon = store.agent_icon(&ExternalAgentServerName(name.clone()));
                 let label = store
                     .agent_display_name(&ExternalAgentServerName(name.clone()))
-                    .unwrap_or_else(|| selected_agent_label.clone()); //Ori,bf nemmotron patch
+                    //.unwrap_or_else(|| self.selected_agent.label()); //Ori,bf nemmotron patch
+                    .unwrap_or_else(|| selected_agent_label.clone()); //gpt5.1& nemmotron patch
                 (icon, label)
 
                 //(icon /* label ignored, we use selected_agent_label */,)
