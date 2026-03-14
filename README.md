@@ -36,7 +36,6 @@ We use [`cargo-about`](https://github.com/EmbarkStudios/cargo-about) to automati
 
 ## Sponsorship
 
-
 Zed is developed by **Zed Industries, Inc.**, a for-profit company.
 If you’d like to financially support the project, you can do so via GitHub Sponsors.
 There are no perks or entitlements associated with sponsorship.

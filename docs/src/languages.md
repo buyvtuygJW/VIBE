@@ -10,6 +10,11 @@ Some work out-of-the box and others rely on 3rd party extensions.
 
 > The ones included out-of-the-box, natively built into Zed, are marked with \*.
 
+> Vibe note: assets\settings\default.json contains the map of language to [[lsp]].
+>> To use a custom lsp.
+>> 1.edit `default.json` then build binary.
+>> 2.Edit `settings.json` (can be quickly accessed with `ctrl + ,` simultanous twice)
+
 ## Languages with Documentation
 
 - [Ansible](./languages/ansible.md)

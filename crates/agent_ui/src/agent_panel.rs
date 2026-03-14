@@ -87,6 +87,9 @@ use zed_actions::{
     agent::{OpenAcpOnboardingModal, OpenSettings, ResetAgentZoom, ResetOnboarding},
     assistant::{OpenRulesLibrary, Toggle, ToggleFocus},
 };
+//nemotron patch bugfix
+use crate::LanguageModelProviderId;
+use language_model::LanguageModelProviderId;
 
 const AGENT_PANEL_KEY: &str = "agent_panel";
 const RECENTLY_UPDATED_MENU_LIMIT: usize = 6;
@@ -397,7 +400,7 @@ impl AgentType {
     }
 
     //nemotron added, patch1,added.
-    fn get_current_model_display(&self, cx: &Context<Self>) -> SharedString {
+    fn get_current_model_display(&mut self, cx: &mut Context<Self>) -> SharedString {
         let agent_settings = AgentSettings::get(Some(SettingsLocation::Workspace), cx);
         if let Some(default_model) = &agent_settings.default_model {
             // We want to show the model name and provider
@@ -3200,7 +3203,7 @@ impl AgentPanel {
         let agent_server_store = self.project.read(cx).agent_server_store().clone();
         let focus_handle = self.focus_handle(cx);
 
-        //nemotrron patch1 to try ui
+        //nemotron patch1 to try ui
         let base_label = match &self.selected_agent {
             AgentType::Custom { name, .. } => name.clone(),
             _ => self.selected_agent.label(),
@@ -3215,12 +3218,13 @@ impl AgentPanel {
         let (selected_agent_custom_icon, _) =
             if let AgentType::Custom { name, .. } = &self.selected_agent {
                 let store = agent_server_store.read(cx);
-
-                //let label = store.agent_display_name(&ExternalAgentServerName(name.clone())).unwrap_or_else(|| self.selected_agent.label());//Ori,bf nemmotron patch
-                //(icon, label)
-
                 let icon = store.agent_icon(&ExternalAgentServerName(name.clone()));
-                (icon /* label ignored, we use selected_agent_label */,)
+                let label = store
+                    .agent_display_name(&ExternalAgentServerName(name.clone()))
+                    .unwrap_or_else(|| self.selected_agent.label()); //Ori,bf nemmotron patch
+                (icon, label)
+
+                //(icon /* label ignored, we use selected_agent_label */,)
             } else {
                 //ori,nemoton patch  //(None, self.selected_agent.label())
                 (None /* label ignored */,)
